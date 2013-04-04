@@ -74,4 +74,5 @@ component = collector.component("Cases Hourly", :duration=>3600)
 component.add_metric 'Cases', 'cases', total_hourly + 50
 #component.add_metric 'Widget Rate', 'widgets/sec', 5
 
-response = collector.submit()
+r = collector.submit()
+p r
