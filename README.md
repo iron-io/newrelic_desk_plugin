@@ -1,24 +1,19 @@
+# Desk.com New Relic Agent
 
-## Creating a New Relic SaaS Agent
+**What:** This agent (extended from this [generic SaaS agent](https://github.com/newrelic-platform/ironworker_saas_agent))
+runs on the [IronWorker](http://iron.io/worker) platform (another service by [Iron.io](http://iron.io)) and collects data from
+Desk.com to send to your own New Relic account.
 
-**Who:** Anybody who wants to publish an agent for an API for others to use
+**Why:** Visualizing your Desk.com data in New Relic is awesome!
 
-**What:** The [New Relic Platform](http://newrelic.com) is a way to push data into New Relic to track and monitor just like all other New Relic Data. Creating a SaaS agent is a one time activity that makes it drop dead simple for any user of that SaaS API to integrate their own data into their own New Relic account. The agent runs on the [IronWorker](http://iron.io/worker) platform by [Iron.io](http://iron.io).
+**How:** The following instructions describe how to configure and schedule the "IronWorker"
+collect data and send to New Relic. It's simple, fast, and **free**!
 
-**Why:** New Relic makes viewing your data awesome, [IronWorker](http://iron.io) makes collecting and sending to New Relic drop dead simple.
+1. Create free account at [Iron.io](http://iron.io) if you don't already have one
+1. Create free account at [New Relic](http://newrelic.com) if you don't already have one
+1. Fill in config/config.yml
+1. Upload it: `iron_worker --config config/config.yml upload desk_agent`
+1. Test it: `iron_worker --config config/config.yml queue desk_agent` - check that it ran successfully at http://hud.iron.io
+1. Schedule it: `iron_worker --config config/config.yml schedule desk_agent --run-every 3600`
 
-**How:**
-
-1. Fork this repo
-1. Add required settings to config/sample_config.yml (remember this is for distribution so do not put real credentials here)
-1. Rename service_agent.worker to whatever_service_agent.worker and add required gems.
-1. Rename service_agent.rb to whatever_service_agent.rb and fill in commented area.
-1. Commit and push to github!
-
-That's it! Now users can use your SaaS agent. For an example of how users use agents, see one of the examples below.
-
-#### Already Created Agents
-
-- [IronMQ](https://github.com/newrelic-platform/ironmq_extension) - Easily track data from the IronMQ cloud message queue service
-
-- TODO: All-the-agents here shortly!
+That's it! You will now see data in New Relic forever!
