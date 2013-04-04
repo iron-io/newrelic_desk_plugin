@@ -1,4 +1,17 @@
-newrelic_license: 'LICENSE_KEY'
+newrelic:
+  license: 'LICENSE_KEY'
+  guid: ''
+  version: 1
+
 iron:
   token: 'IRON_TOKEN'
   project_id: 'PROJECT_ID'
+
+desk:
+  support_email: ''
+  subdomain: ''
+  key: ''
+  secret: ''
+  oauth_token: ''
+  oauth_secret: ''
+

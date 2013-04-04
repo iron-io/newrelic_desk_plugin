@@ -1,5 +1,5 @@
 runtime 'ruby'
-exec 'service_agent.rb'
+exec 'desk_agent.rb'
 
 dir 'config'
 
@@ -9,4 +9,5 @@ gem 'newrelic_platform'
 
 
 # include any gems required to get data from service
-
+gem 'desk'
+gem 'iron_cache'
