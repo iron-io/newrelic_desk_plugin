@@ -31,6 +31,7 @@ cache = ic.cache("newrelic-desk-agent")
 
 # since_hourly so we can do daily, weekly, etc
 since_hourly = cache.get("since_hourly")
+total_hourly = 0
 
 if since_hourly
   puts "since_hourly: #{since_hourly.value}"
@@ -45,8 +46,16 @@ if since_hourly
   total_hourly = r['total'] - 1
   puts "total: #{total_hourly}"
 
+  component = collector.component("Cases Hourly", :duration=>3600)
+  component.add_metric 'Cases', 'cases', total_hourly
+  #component.add_metric 'Widget Rate', 'widgets/sec', 5
+
+  r = collector.submit()
+  p r
+
 else
-  puts "no since_hourly, getting latest case..."
+  puts "No previous data so this won't start logging for another hour."
+  puts "Getting latest case..."
   # let's get mosts recent since_id so we can start this off
   r = Desk.cases
   total_cases = r["total"]
@@ -69,10 +78,3 @@ else
 
 end
 
-
-component = collector.component("Cases Hourly", :duration=>3600)
-component.add_metric 'Cases', 'cases', total_hourly + 50
-#component.add_metric 'Widget Rate', 'widgets/sec', 5
-
-r = collector.submit()
-p r
