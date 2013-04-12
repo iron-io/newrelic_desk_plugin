@@ -11,7 +11,7 @@ collect data and send to New Relic. It's simple, fast, and **free**!
 
 1. Create free account at [Iron.io](http://iron.io) if you don't already have one
 1. Create free account at [New Relic](http://newrelic.com) if you don't already have one
-1. Fill in config/config.yml
+1. Copy config/sample_config.yml to config/config.yml, then fill it in with your information.
 1. Upload it: `iron_worker upload --config config/config.yml desk_agent`
 1. Test it: `iron_worker queue --config config/config.yml desk_agent` - check that it ran successfully at http://hud.iron.io
 1. Schedule it: `iron_worker schedule --config config/config.yml desk_agent --run-every 3600`
