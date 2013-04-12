@@ -85,8 +85,7 @@ end
 # now store since_id for next time
 results = cases_result['results']
 final = results[results.length-1]
-puts "final"
-p final
+puts "Most recent case: #{final.inspect}"
 since_id = final[:case][:id]
-p since_id
+puts "Storing most recent id: #{since_id}"
 cache.put("since_hourly", since_id)
