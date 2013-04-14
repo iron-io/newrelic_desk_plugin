@@ -47,16 +47,8 @@ if since_hourly
   puts "total: #{total_hourly}"
   cases_result = r
 
-  component = collector.component("Cases Hourly", :duration=>3600)
-  component.add_metric 'Cases', 'cases', total_hourly
-  #component.add_metric 'Widget Rate', 'widgets/sec', 5
-
-  r = collector.submit()
-  p r
-
-
 else
-  puts "No previous data so this won't start logging for another hour."
+  puts "No previous data, getting latest case to start the stats from..."
   puts "Getting latest case..."
   # let's get mosts recent since_id so we can start this off
   r = Desk.cases
@@ -80,7 +72,16 @@ else
 
   cases_result = r2
 
+  total_hourly = 1 # just to get one data point in there
+
 end
+
+component = collector.component("Cases Hourly", :duration=>3600)
+component.add_metric 'Cases', 'cases', total_hourly
+#component.add_metric 'Widget Rate', 'widgets/sec', 5
+
+r = collector.submit()
+p r
 
 # now store since_id for next time
 results = cases_result['results']
