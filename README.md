@@ -45,7 +45,7 @@ Need the iron_worker_ng gem, but you don't need to clone the repo or anything li
 
 1. `gem install iron_worker_ng`
 1. Copy and paste contents of this file: https://github.com/newrelic-platform/ironio_desk_extension/blob/master/desk_agent.config.yml into a file on your computer called `config.yml` and fill it in with your credentials.
-1. Upload it: `iron_worker upload --config.yml https://github.com/newrelic-platform/ironio_desk_extension/blob/master/desk_agent.worker --worker-config config.yml`
+1. Upload it: `iron_worker upload --config config.yml https://github.com/newrelic-platform/ironio_desk_extension/blob/master/desk_agent.worker --worker-config config.yml`
 1. Test it: `iron_worker queue --config config.yml desk_agent --wait` - can also check task status at http://hud.iron.io
 1. Schedule it: `iron_worker schedule --config config.yml desk_agent --run-every 3600`
 
