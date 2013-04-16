@@ -41,6 +41,8 @@ Can do it all from the Iron.io UI, no code, no files, etc.
 
 ### Easiest way
 
+THIS WILL NOT WORK UNTIL THIS IS PUBLIC, USE THE HARDEST WAY FOR NOW.
+
 Need the iron_worker_ng gem, but you don't need to clone the repo or anything like that.
 
 1. `gem install iron_worker_ng`
@@ -50,6 +52,10 @@ Need the iron_worker_ng gem, but you don't need to clone the repo or anything li
 1. Schedule it: `iron_worker schedule --config config.yml desk_agent --run-every 3600`
 
 ### Hardest way
+
+UNTIL WE CAN PUBLISH THIS PUBLICLY, YOU'LL NEED TO DOWNLOAD AND INSTALL THE MOST RECENT NEWRELIC GEM AT:
+https://github.com/newrelic-platform/iron_sdk . Download newrelic_platform-x.y.z.gem file then install it with:
+`gem install newrelic_platform-x.y.z.gem`.
 
 Well, it's not that hard and you can customize the worker to your liking.
 
