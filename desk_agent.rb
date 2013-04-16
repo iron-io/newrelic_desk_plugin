@@ -7,8 +7,6 @@ require 'iron_cache'
 # https://github.com/newrelic-platform/iron_sdk
 require 'newrelic_platform'
 
-config = YAML.load_file('config/config.yml')
-
 new_relic = NewRelic::Client.new(:license => config['newrelic']['license'],
                                   :guid => config['newrelic']['guid'],
                                   :version => config['newrelic']['version'])
