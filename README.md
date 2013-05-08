@@ -22,9 +22,6 @@ First, let's get setup:
 
 Now the fun stuff.
 
-<!---
- NOT READY YET
-
 ### Easiest Way
 
 Can do it all from the Iron.io UI, no code, no files, etc.
@@ -35,11 +32,10 @@ Can do it all from the Iron.io UI, no code, no files, etc.
 1. Enter `https://github.com/newrelic-platform/ironio_desk_extension/blob/master/desk_agent.worker` in the worker URL.
 1. Fill in the config
 1. Click upload
-1. Click queue to run it once to test it
+1. Click queue to run it once to test it (check that data shows up in NewRelic)
 1. Click schedule to schedule it
---->
 
-### Easiest way
+### Bit harder, requires command line tool, still no code
 
 THIS WILL NOT WORK UNTIL THIS IS PUBLIC, USE THE HARDEST WAY FOR NOW.
 
