@@ -24,6 +24,8 @@ Now the fun stuff.
 
 ### Easiest Way
 
+THIS WILL NOT WORK UNTIL THIS IS PUBLIC, USE THE HARDEST WAY FOR NOW.
+
 Can do it all from the Iron.io UI, no code, no files, etc.
 
 1. Log in to [HUD](https://hud.iron.io)
