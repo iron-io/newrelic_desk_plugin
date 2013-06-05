@@ -1,11 +1,13 @@
 runtime 'ruby'
 exec 'desk_agent.rb'
+name 'Desk Agent (New Relic)'
+
+# uncomment when newrelic-platform gem will be public
+# gemfile 'Gemfile'
 
 # Requires manual installation of the New Relic plaform gem (platform is in closed beta)
 # https://github.com/newrelic-platform/iron_sdk
-
 gem 'newrelic_platform'
-
 
 # include any gems required to get data from service
 gem 'desk'
