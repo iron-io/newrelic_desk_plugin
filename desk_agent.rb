@@ -1,17 +1,18 @@
-require 'rest'
+`gem install newrelic_platform-0.0.2.gem`
+
 require 'yaml'
 require 'desk'
 require 'iron_cache'
-
 # Requires manual installation of the New Relic plaform gem (platform is in closed beta)
 # https://github.com/newrelic-platform/iron_sdk
 require 'newrelic_platform'
 
-new_relic = NewRelic::Client.new(:license => config['newrelic']['license'],
+# Un-comment to test/debug locally
+ def config; @config ||= YAML.load_file('./desk_agent.config.yml'); end
+
+@new_relic = NewRelic::Client.new(:license => config['newrelic']['license'],
                                   :guid => config['newrelic']['guid'],
                                   :version => config['newrelic']['version'])
-
-collector = new_relic.new_collector
 
 ## Here is where you'll fill in your own data to be sent to New Relic
 desk_config = config['desk']
@@ -24,67 +25,119 @@ Desk.configure do |config|
   config.oauth_token_secret = desk_config['oauth_secret']
 end
 
-ic = IronCache::Client.new(config['iron'])
-cache = ic.cache("newrelic-desk-agent")
-
-# since_hourly so we can do daily, weekly, etc
-since_hourly = cache.get("since_hourly")
-total_hourly = 0
-
-if since_hourly
-  puts "since_hourly: #{since_hourly.value}"
-  r = Desk.cases(:since_id=>since_hourly.value)
-  #r.each do |c|
-  #  p c
-  #end
-  r['results'].each do |c|
-    p c
-  end
-  # first result is the since_hourly, so subtract from it
-  total_hourly = r['total'] - 1
-  puts "total: #{total_hourly}"
-  cases_result = r
-
-else
-  puts "No previous data, getting latest case to start the stats from..."
-  puts "Getting latest case..."
-  # let's get mosts recent since_id so we can start this off
-  r = Desk.cases
-  total_cases = r["total"]
-  page = total_cases / r["count"]
-  puts "page #{page}"
-  r2 = Desk.cases(:page=>page+1)
-  r2.each do |c|
-    p c
-  end
-  if r2['results'].length == 0
-    puts "trying previous page, no results in this one"
-    r2 = Desk.cases(:page=>page)
-    r2.each do |c|
-      p c
-    end
-  end
-  #r2['results'].each do |c|
-  #  p c
-  #end
-
-  cases_result = r2
-
-  total_hourly = 1 # just to get one data point in there
-
+begin
+  @cache = IronCache::Client.new(config['iron']).cache("newrelic-desk-agent")
+rescue Exception => err
+  abort 'Iron.io credentials are wrong.'
 end
 
-component = collector.component("Cases Hourly", :duration=>3600)
-component.add_metric 'Cases', 'cases', total_hourly
-#component.add_metric 'Widget Rate', 'widgets/sec', 5
+# Helpers
+def stderr_to_stdout
+  $stderr_backup = $stderr unless $stderr_backup
+  $stderr = $stdout
+end
 
-r = collector.submit()
-p r
+def restore_stderr
+  $stderr = $stderr_backup if $stderr_backup
+end
 
-# now store since_id for next time
-results = cases_result['results']
-final = results[results.length-1]
-puts "Most recent case: #{final.inspect}"
-since_id = final[:case][:id]
-puts "Storing most recent id: #{since_id}"
-cache.put("since_hourly", since_id)
+def duration(from, to)
+  dur = from ? (to - from).to_i : 3600
+
+  dur > 3600 ? 3600 : dur
+end
+
+def up_to(to = nil)
+  if to
+    @up_to = Time.at(to.to_i).utc
+  else
+    @up_to ||= Time.now.utc
+  end
+end
+
+def processed_at(processed = nil)
+  if processed
+    @cache.put('previously_processed_at', processed.to_i)
+
+    @processed_at = Time.at(processed.to_i).utc
+  elsif @processed_at.nil?
+    item = @cache.get 'previously_processed_at'
+    min_prev_allowed = (up_to - 3600).to_i
+
+    at = if item && item.value.to_i > min_prev_allowed
+           item.value
+         else
+           min_prev_allowed
+         end
+
+    @processed_at = Time.at(at).utc
+  else
+    @processed_at
+  end
+end
+
+def cases_by_status(cases, status)
+  cases.select { |c| c.case.case_status_type == status }
+end
+
+# Process
+stderr_to_stdout
+
+collector = @new_relic.new_collector
+component = collector.component 'Cases'
+
+# Latest cases
+latest_cases = []
+page = 1
+num_results = 0
+begin
+  r = nil
+  begin
+    r = Desk.cases(:since_created_at => processed_at,
+                   :max_created_at => up_to,
+                   :page => page,
+                   :count => 100)
+  rescue Exception => err
+    if err.message.downcase =~ /oauth/
+      abort 'Seems Desk.com credentials are wrong'
+    else
+      abort("Error happened while retrieving data from Desk.com" +
+            "Error message: '#{err.message}'.")
+    end
+  end
+
+  latest_cases |= r.results
+  num_results = r.results.count
+  page += 1
+end while num_results == 100
+
+component.add_metric('Cases/Latest/Total', 'cases', latest_cases.count)
+['new', 'open', 'pending', 'resolved', 'closed'].each do |status|
+  component.add_metric("Cases/Latest/#{status.capitalize}", 'cases',
+                       cases_by_status(latest_cases, status).count)
+end
+
+# Overall cases (only new, open and pending)
+['new', 'open', 'pending'].each do |status|
+  r = Desk.cases(:status => status, :count => 2)
+
+  component.add_metric("Cases/All/#{status.capitalize}",
+                       'cases', r.total)
+end
+
+component.options[:duration] = duration(processed_at, up_to)
+
+begin
+  # Submit data to New Relic
+  collector.submit
+rescue Exception => err
+  restore_stderr
+  if err.message.downcase =~ /http 403/
+    abort "Seems New Relic's license key is wrong."
+  else
+    abort("Error happened while sending data to New Relic. " +
+          "Error message: '#{err.message}'.")
+  end
+end
+
+processed_at(up_to)
