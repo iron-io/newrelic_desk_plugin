@@ -8,7 +8,7 @@ require 'iron_cache'
 require 'newrelic_platform'
 
 # Un-comment to test/debug locally
- def config; @config ||= YAML.load_file('./desk_agent.config.yml'); end
+# def config; @config ||= YAML.load_file('./desk_agent.config.yml'); end
 
 @new_relic = NewRelic::Client.new(:license => config['newrelic']['license'],
                                   :guid => config['newrelic']['guid'],
@@ -93,15 +93,18 @@ num_results = 0
 begin
   r = nil
   begin
-    r = Desk.cases(:since_created_at => processed_at,
-                   :max_created_at => up_to,
+    r = Desk.cases(:since_created_at => processed_at.to_i,
+                   :max_created_at => up_to.to_i,
                    :page => page,
                    :count => 100)
   rescue Exception => err
+    restore_stderr
     if err.message.downcase =~ /oauth/
-      abort 'Seems Desk.com credentials are wrong'
+      abort 'Seems Desk.com credentials are wrong.'
+    elsif err.message.downcase =~ /getaddrinfo/
+      abort 'Seems Desk.com subdomain is wrong.'
     else
-      abort("Error happened while retrieving data from Desk.com" +
+      abort("Error happened while retrieving data from Desk.com. " +
             "Error message: '#{err.message}'.")
     end
   end
