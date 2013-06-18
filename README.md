@@ -24,8 +24,6 @@ Now the fun stuff.
 
 ### Easiest Way
 
-THIS WILL NOT WORK UNTIL THIS IS PUBLIC, USE THE HARDEST WAY FOR NOW.
-
 Can do it all from the Iron.io UI, no code, no files, etc.
 
 1. Log in to [HUD](https://hud.iron.io)
@@ -39,29 +37,12 @@ Can do it all from the Iron.io UI, no code, no files, etc.
 
 ### Bit harder, requires command line tool, still no code
 
-THIS WILL NOT WORK UNTIL THIS IS PUBLIC, USE THE HARDEST WAY FOR NOW.
-
 Need the iron_worker_ng gem, but you don't need to clone the repo or anything like that.
 
 1. `gem install iron_worker_ng`
 1. Copy and paste contents of this file: https://github.com/newrelic-platform/ironio_desk_extension/blob/master/desk_agent.config.yml into a file on your computer called `config.yml` and fill it in with your credentials.
 1. Upload it: `iron_worker upload --config config.yml https://github.com/newrelic-platform/ironio_desk_extension/blob/master/desk_agent.worker --worker-config config.yml`
 1. Test it: `iron_worker queue --config config.yml desk_agent --wait` - can also check task status at http://hud.iron.io
-1. Schedule it: `iron_worker schedule --config config.yml desk_agent --run-every 3600`
-
-### Hardest way
-
-UNTIL WE CAN PUBLISH THIS PUBLICLY, YOU'LL NEED TO DOWNLOAD AND INSTALL THE MOST RECENT NEWRELIC GEM AT:
-https://github.com/newrelic-platform/iron_sdk . Download newrelic_platform-x.y.z.gem file then install it with:
-`gem install newrelic_platform-x.y.z.gem`.
-
-Well, it's not that hard and you can customize the worker to your liking.
-
-1. `gem install iron_worker_ng`
-1. Clone this repository
-1. Copy desk_agent.config.yml to config.yml, then fill it in with your information.
-1. Upload it: `iron_worker upload --config config.yml desk_agent --worker-config config.yml`
-1. Test it: `iron_worker queue --config config.yml desk_agent --wait` - You can also check task status at http://hud.iron.io
 1. Schedule it: `iron_worker schedule --config config.yml desk_agent --run-every 3600`
 
 That's it! You will now see data in New Relic forever!
