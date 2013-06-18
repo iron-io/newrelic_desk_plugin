@@ -1,12 +1,13 @@
 newrelic:
-  license: 'LICENSE_KEY'
-  guid: ''
-  version: "1" # bump this everytime you upload a changed worker
+  license: '' # New Relic license key
+  version: '3' # bump this everytime you upload a changed worker
 
+# Iron.io credentials (where you launch your agent)
 iron:
-  token: 'IRON_TOKEN'
-  project_id: 'PROJECT_ID'
+  project_id: ''
+  token: ''
 
+# Desk.com configuration
 desk:
   support_email: ''
   subdomain: ''

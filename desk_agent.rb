@@ -11,7 +11,7 @@ require 'newrelic_platform'
 # def config; @config ||= YAML.load_file('./desk_agent.config.yml'); end
 
 @new_relic = NewRelic::Client.new(:license => config['newrelic']['license'],
-                                  :guid => config['newrelic']['guid'],
+                                  :guid => 'io.iron.desk',
                                   :version => config['newrelic']['version'])
 
 ## Here is where you'll fill in your own data to be sent to New Relic
