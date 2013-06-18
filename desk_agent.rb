@@ -1,5 +1,3 @@
-`gem install newrelic_platform-0.0.2.gem`
-
 require 'yaml'
 require 'desk'
 require 'iron_cache'
