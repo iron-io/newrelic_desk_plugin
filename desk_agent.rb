@@ -10,7 +10,7 @@ require 'newrelic_platform'
 
 @new_relic = NewRelic::Client.new(:license => config['newrelic']['license'],
                                   :guid => 'io.iron.desk',
-                                  :version => config['newrelic']['version'])
+                                  :version => '3')
 
 ## Here is where you'll fill in your own data to be sent to New Relic
 desk_config = config['desk']

@@ -1,6 +1,5 @@
 newrelic:
   license: '' # New Relic license key
-  version: '3' # bump this everytime you upload a changed worker
 
 # Iron.io credentials (where you launch your agent)
 iron:
