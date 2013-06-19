@@ -30,7 +30,7 @@ Get started in a few seconds!
 2. Fill in your New Relic license key and Desk.com information
 3. Click "Start Agent"
 
-Boom, done!
+Boom, done!  It can take 5-10 minutes for data to show up in New Relic so be patient. 
 
 ### For unofficially supported agents 
 
