@@ -126,6 +126,20 @@ end
                        'cases', r.total)
 end
 
+# grouped metrics
+groups = Desk.groups(:count => 100)
+groups.results.each do |group|
+  group_name = group.group.name
+  ['new', 'open', 'pending'].each do |status|
+    r = Desk.cases(:assigned_group => group_name,
+                   :status => status, :count => 2)
+
+    component.add_metric("Cases/Grouped/#{status.capitalize}/#{group_name}",
+                         'cases', r.total)
+    
+  end
+end
+
 component.options[:duration] = duration(processed_at, up_to)
 
 begin
